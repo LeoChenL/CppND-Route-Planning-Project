@@ -41,13 +41,14 @@ void Render::DrawPath(io2d::output_surface &surface) const{
 }
 
 void Render::DrawEndPosition(io2d::output_surface &surface) const{
+    if (m_Model.path.empty()) return;
     io2d::render_props aliased{ io2d::antialias::none };
     io2d::brush foreBrush{ io2d::rgba_color::red };
 
     auto pb = io2d::path_builder{}; 
     pb.matrix(m_Matrix);
 
-    pb.new_figure({(float) m_Model.path.front().x, (float) m_Model.path.front().y});
+    pb.new_figure({(float) m_Model.path.back().x, (float) m_Model.path.back().y});
     float constexpr l_marker = 0.01f;
     pb.rel_line({l_marker, 0.f});
     pb.rel_line({0.f, l_marker});
@@ -57,17 +58,18 @@ void Render::DrawEndPosition(io2d::output_surface &surface) const{
     
     surface.fill(foreBrush, pb);
     surface.stroke(foreBrush, io2d::interpreted_path{pb}, std::nullopt, std::nullopt, std::nullopt, aliased);
-
 }
 
 void Render::DrawStartPosition(io2d::output_surface &surface) const{
+    if (m_Model.path.empty()) return;
+
     io2d::render_props aliased{ io2d::antialias::none };
     io2d::brush foreBrush{ io2d::rgba_color::green };
 
     auto pb = io2d::path_builder{}; 
     pb.matrix(m_Matrix);
 
-    pb.new_figure({(float) m_Model.path.back().x, (float) m_Model.path.back().y});
+    pb.new_figure({(float) m_Model.path.front().x, (float) m_Model.path.front().y});
     float constexpr l_marker = 0.01f;
     pb.rel_line({l_marker, 0.f});
     pb.rel_line({0.f, l_marker});

@@ -3,8 +3,10 @@ cmake_minimum_required(VERSION 3.11.3)
 # Set the C++ standard we will use
 set(CMAKE_CXX_STANDARD 17)
 
+# include(${CMAKE_SOURCE_DIR}/../P0267_RefImpl/CMakeLists.txt)
 # Add the path of the cmake files to the CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+# set(io2d_DIR /home/jasmine/PlayGround/P0267_RefImpl/Debug/P0267_RefImpl/P0267_RefImpl/CMakeFiles/Export/lib/cmake/io2d)
 
 project(OSM_A_star_search)
 
@@ -33,12 +35,12 @@ target_link_libraries(OSM_A_star_search
 )
 
 # Add the testing executable
-add_executable(test test/utest_rp_a_star_search.cpp src/route_planner.cpp src/model.cpp src/route_model.cpp)
+#add_executable(test test/utest_rp_a_star_search.cpp src/route_planner.cpp src/model.cpp src/route_model.cpp)
 
-target_link_libraries(test 
-    gtest_main 
-    pugixml
-)
+#target_link_libraries(test
+#    gtest_main
+#    pugixml
+#)
 
 # Set options for Linux or Microsoft Visual C++
 if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )

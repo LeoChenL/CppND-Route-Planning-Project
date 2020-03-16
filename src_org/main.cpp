@@ -36,7 +36,9 @@ int main(int argc, const char **argv)
                 osm_data_file = argv[i];
     }
     else {
-        std::cout << "Usage: [executable] [-f filename.osm]" << std::endl;    
+        std::cout << "To specify a map file use the following format: " << std::endl;
+        std::cout << "Usage: [executable] [-f filename.osm]" << std::endl;
+        osm_data_file = "../map.osm";
     }
     
     std::vector<std::byte> osm_data;
@@ -50,30 +52,20 @@ int main(int argc, const char **argv)
             osm_data = std::move(*data);
     }
     
-    // TODO: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
+    // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
     // user input for these values using std::cin. Pass the user input to the
-    // RoutePlanner object below.
-    float start_x;
-    float start_y;
-    float end_x;
-    float end_y;
-    std::cout << "Please enter map coordinates, the range is from 1 to 100" << "\n";
-    std::cout << "Enter the starting x coordinate" << "\n";
-    std::cin >> start_x;
-    std::cout << "Enter the starting y coordinate" << "\n";
-    std::cin >> start_y;
-    std::cout << "Enter the ending x coordinate" << "\n";
-    std::cin >> end_x;
-    std::cout << "Enter the ending y coordinate" << "\n";
-    std::cin >> end_y;
+    // RoutePlanner object below in place of 10, 10, 90, 90.
 
     // Build Model.
     RouteModel model{osm_data};
 
-    // Perform search and render results.
-    RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
+    // Create RoutePlanner object and perform A* search.
+    RoutePlanner route_planner{model, 10, 10, 90, 90};
     route_planner.AStarSearch();
-    std::cout << "Total Distance: " << route_planner.GetDistance() << "\n";
+
+    std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
+
+    // Render results of search.
     Render render{model};
 
     auto display = io2d::output_surface{400, 400, io2d::format::argb32, io2d::scaling::none, io2d::refresh_style::fixed, 30};
