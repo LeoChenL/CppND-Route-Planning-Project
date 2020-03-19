@@ -9,7 +9,12 @@ RouteModel::RouteModel(const std::vector<std::byte> &xml) : Model(xml) {
   }
   CreateNodeToRoadHashmap();
 }
-                        
+
+/*
+Create node to road map
+{node index : vector<road pointer>}
+each node is possible to map to multi roads
+*/
 void RouteModel::CreateNodeToRoadHashmap() {
   for(const Model::Road &road: Roads()) {
     if (road.type != Model::Road::Type::Footway) {
@@ -18,14 +23,15 @@ void RouteModel::CreateNodeToRoadHashmap() {
           node_to_road[node_idx] = std::vector<const Model::Road*>();
         }
         node_to_road[node_idx].push_back(&road);
-      }   
+      }
     }
   }
-} 
+}
 
+// Find the closest and non visited node in the range node_indices
 RouteModel::Node * RouteModel::Node::FindNeighbor(std::vector<int> node_indices) {
-  // Create a pointer 
-  Node *closest_node = nullptr;
+  // Create a pointer
+  Node *closest_node = nullptr; // RouteModel::Node
   // Declare a temporary Node variable node
   Node node;
   // For each node_index in node_indices
@@ -34,7 +40,7 @@ RouteModel::Node * RouteModel::Node::FindNeighbor(std::vector<int> node_indices)
     node = parent_model->SNodes()[node_idx];
     // If the distance from this to node is nonzero, and the node has not been visited:
     if (this->distance(node) != 0 && !node.visited) {
-    //     If the closest_node equals nullptr, _or_ the distance from this to node is less 
+    //     If the closest_node equals nullptr, _or_ the distance from this to node is less
     //     than the distance from this to *closest_node:
 
       if (closest_node == nullptr || this->distance(node) < this->distance(*closest_node)) {
@@ -45,9 +51,12 @@ RouteModel::Node * RouteModel::Node::FindNeighbor(std::vector<int> node_indices)
   }
   // finally, return the closest_node.
   return closest_node;
-}   
+}
 
+// find the closest node in each related road
 void RouteModel::Node::FindNeighbors() {
+  // traverse all roads related to this node
+  // find the closest node in each road
   for (auto &road: parent_model->node_to_road[this->index]) {
     RouteModel::Node* neighbor = this->FindNeighbor(parent_model->Ways()[road->way].nodes);
     if (neighbor != nullptr) {
@@ -56,6 +65,7 @@ void RouteModel::Node::FindNeighbors() {
   }
 }
 
+// find the closest node to (x,y) among roads
 RouteModel::Node &RouteModel::FindClosestNode(float x, float y) {
   Node input_node = Node();
   input_node.x = x;

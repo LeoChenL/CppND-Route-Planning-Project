@@ -13,12 +13,12 @@ class RouteModel : public Model {
     class Node : public Model::Node {
       public:
         // Public Node variables and methods
-        Node * parent = nullptr;
+        Node * parent = nullptr; // RouteModel::Node
         float h_value = std::numeric_limits<float>::max();
         float g_value = 0.0;
         bool visited = false;
-        std::vector<Node*> neighbors;
-      
+        std::vector<Node*> neighbors; // the closest node in each related road
+
         float distance(Node other_node) const {
           return std::sqrt(std::pow((x - other_node.x), 2) + std::pow((y - other_node.y), 2));
         }
@@ -28,19 +28,19 @@ class RouteModel : public Model {
         // constructors
         Node(){}
         Node(int idx, RouteModel * search_model, Model::Node node) : Model::Node(node), parent_model(search_model), index(idx) {}
-      
+
       private:
         // Private Node variables and methods
-        int index;
+        int index; // index of node according to the initialization order [0,number of node in the map)
         RouteModel* parent_model = nullptr;
-        Node * FindNeighbor(std::vector<int> node_indices);
+        Node * FindNeighbor(std::vector<int> node_indices); // RouteModel::Node
     };
 
     // Public RouteModel variables and methods
-    RouteModel(const std::vector<std::byte> &xml);  
-    std::vector<Node> path; // This variable will eventually store the 
+    RouteModel(const std::vector<std::byte> &xml);
+    std::vector<Node> path; // This variable will eventually store the
                             // path that is found by the A* search.
-    
+
     std::vector<Node> &SNodes() {
       return m_Nodes;
     }
@@ -49,7 +49,7 @@ class RouteModel : public Model {
       return node_to_road;
     }
     Node &FindClosestNode(float x, float y);
-    
+
   private:
     // Private RouteModel variables and methods
     std::vector<Node> m_Nodes;
